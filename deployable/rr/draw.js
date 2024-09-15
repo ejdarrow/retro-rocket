@@ -18,6 +18,33 @@ var DrawManager = /** @class */ (function () {
     DrawManager.prototype.setCanvasElement = function (element) {
         this.canvasElement = element;
     };
+    DrawManager.prototype.getFrameBuffer = function () {
+        return this.frameBuffer;
+    };
+    DrawManager.prototype.getColors = function () {
+        return this.colors;
+    };
+    DrawManager.prototype.getWidth = function () {
+        return this.width;
+    };
+    DrawManager.prototype.getHeight = function () {
+        return this.height;
+    };
+    /**
+    Get [height, width] as a two-element array.
+    */
+    DrawManager.prototype.getDims = function () {
+        return [this.height, this.width];
+    };
+    DrawManager.prototype.setFrameBuffer = function (framebuffer) {
+        this.framebuffer = framebuffer;
+    };
+    DrawManager.prototype.setPixel = function (x, y, c) {
+        this.framebuffer[x][y] = c;
+    };
+    /**
+    Set all of the colors.
+    */
     DrawManager.prototype.setColors = function (colorsToSet) {
         if (colorsToSet.length > colorLimit) {
             return false;
@@ -26,6 +53,9 @@ var DrawManager = /** @class */ (function () {
             this.colors = colorsToSet;
         }
     };
+    /**
+    Set specifically one color.
+    */
     DrawManager.prototype.setColor = function (index, colorToSet) {
         this.colors[index] = colorToSet;
     };
@@ -41,6 +71,11 @@ var DrawManager = /** @class */ (function () {
             }
         }
     };
+    /**
+    Fire this from the event in FrameManager unless you
+    override the frame manager. Shoves the framebuffer
+    into the viewport.
+    */
     DrawManager.prototype.drawFrame = function () {
         var canvasContext = this.canvasElement.getContext("2d");
         for (var i = 0; i < this.height; i++) {

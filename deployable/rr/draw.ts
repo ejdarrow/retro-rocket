@@ -23,6 +23,40 @@ setCanvasElement(element: Element) {
   this.canvasElement = element;
 }
 
+
+getFrameBuffer() {
+  return this.frameBuffer;
+}
+
+  getColors() {
+    return this.colors;
+  }
+
+  getWidth() {
+    return this.width;
+  }
+
+  getHeight() {
+    return this.height;
+  }
+/**
+Get [height, width] as a two-element array.
+*/
+  getDims() {
+    return [this.height, this.width];
+  }
+
+  setFrameBuffer(framebuffer:any) {
+    this.framebuffer = framebuffer;
+  }
+
+  setPixel(x:number, y:number, c:number) {
+    this.framebuffer[x][y] = c;
+  }
+
+/**
+Set all of the colors.
+*/
 setColors(colorsToSet: number[] ) {
   if(colorsToSet.length > colorLimit) {
     return false;
@@ -31,6 +65,9 @@ setColors(colorsToSet: number[] ) {
   }
 }
 
+/**
+Set specifically one color.
+*/
 setColor(index:number, colorToSet:string){
   this.colors[index] = colorToSet;
 }
@@ -49,6 +86,11 @@ private initializeFrameBuffer() {
   }
 }
 
+/**
+Fire this from the event in FrameManager unless you
+override the frame manager. Shoves the framebuffer
+into the viewport.
+*/
 drawFrame() {
   var canvasContext = this.canvasElement.getContext("2d");
   for(var i = 0; i < this.height; i++) {
@@ -70,4 +112,5 @@ private drawPixel(ctx:CanvasRenderingContext2D, indexH:number, indexW:number, co
   let [x, y, xp, yp] = this.makePixelRect(indexH, indexW);
   ctx.fillRect(x, y, xp, yp);
 }
+
 }

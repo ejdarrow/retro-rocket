@@ -2,6 +2,7 @@
 <head>
   <script> var exports = {}; </script>
   <script src="rr/draw.js"> </script>
+  <script src="rr/frame.js"> </script>
 <script src="game/game.js"> </script>
 </head>
 <body>
@@ -9,6 +10,10 @@
 
 <script>
   let drawManager = new DrawManager(document.getElementById("frame"));
-  drawManager.drawFrame();
+  let frameManager = new FrameManager(drawManager);
+  let game = new Game();
+  frameManager.setStartFunction(game.start);
+  frameManager.setFrameFunction(game.update);
+  frameManager.start();
 </script>
 </body>
