@@ -3,6 +3,7 @@ export class DrawManager {
   height: number = 144;
   framebuffer: any;
   colors: number[];
+  dirty: boolean = false;
 
   canvasElement: Element;
   scale: number = 4; //adaptive scale?
@@ -47,10 +48,12 @@ Get [height, width] as a two-element array.
   }
 
   setFramebuffer(framebuffer:any) {
+    this.dirty = true;
     this.framebuffer = framebuffer;
   }
 
   setPixel(x:number, y:number, c:number) {
+    this.dirty = true;
     this.framebuffer[x][y] = c;
   }
 
@@ -58,7 +61,8 @@ Get [height, width] as a two-element array.
 Set all of the colors.
 */
 setColors(colorsToSet: number[] ) {
-  if(colorsToSet.length > colorLimit) {
+  this.dirty = true;
+  if(colorsToSet.length > this.colorLimit) {
     return false;
   } else {
     this.colors = colorsToSet;
@@ -92,11 +96,14 @@ override the frame manager. Shoves the framebuffer
 into the viewport.
 */
 drawFrame() {
-  var canvasContext = this.canvasElement.getContext("2d");
-  for(var i = 0; i < this.height; i++) {
-    for(var j = 0; j < this.width; j++) {
-      this.drawPixel(canvasContext, i, j, this.framebuffer[i][j])
+  if(this.dirty) {
+    var canvasContext = this.canvasElement.getContext("2d");
+    for(var i = 0; i < this.height; i++) {
+      for(var j = 0; j < this.width; j++) {
+        this.drawPixel(canvasContext, i, j, this.framebuffer[i][j])
+      }
     }
+    this.dirty = false;
   }
 }
 

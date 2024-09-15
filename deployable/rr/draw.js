@@ -5,6 +5,7 @@ var DrawManager = /** @class */ (function () {
     function DrawManager(canvasElement) {
         this.width = 160;
         this.height = 144;
+        this.dirty = false;
         this.scale = 4; //adaptive scale?
         this.white = "white";
         this.black = "black";
@@ -37,16 +38,19 @@ var DrawManager = /** @class */ (function () {
         return [this.height, this.width];
     };
     DrawManager.prototype.setFramebuffer = function (framebuffer) {
+        this.dirty = true;
         this.framebuffer = framebuffer;
     };
     DrawManager.prototype.setPixel = function (x, y, c) {
+        this.dirty = true;
         this.framebuffer[x][y] = c;
     };
     /**
     Set all of the colors.
     */
     DrawManager.prototype.setColors = function (colorsToSet) {
-        if (colorsToSet.length > colorLimit) {
+        this.dirty = true;
+        if (colorsToSet.length > this.colorLimit) {
             return false;
         }
         else {
@@ -77,11 +81,14 @@ var DrawManager = /** @class */ (function () {
     into the viewport.
     */
     DrawManager.prototype.drawFrame = function () {
-        var canvasContext = this.canvasElement.getContext("2d");
-        for (var i = 0; i < this.height; i++) {
-            for (var j = 0; j < this.width; j++) {
-                this.drawPixel(canvasContext, i, j, this.framebuffer[i][j]);
+        if (this.dirty) {
+            var canvasContext = this.canvasElement.getContext("2d");
+            for (var i = 0; i < this.height; i++) {
+                for (var j = 0; j < this.width; j++) {
+                    this.drawPixel(canvasContext, i, j, this.framebuffer[i][j]);
+                }
             }
+            this.dirty = false;
         }
     };
     DrawManager.prototype.makePixelRect = function (indexH, indexW) {
