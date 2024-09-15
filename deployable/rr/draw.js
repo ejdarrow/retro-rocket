@@ -16,6 +16,7 @@ var DrawManager = /** @class */ (function () {
         this.initializeColors();
         this.initializeFrameBuffer();
         this.initializeDirtyBuffer();
+        this.lastFrame = structuredClone(this.framebuffer);
     }
     DrawManager.prototype.setCanvasElement = function (element) {
         this.canvasElement = element;
@@ -40,7 +41,6 @@ var DrawManager = /** @class */ (function () {
     };
     DrawManager.prototype.setFramebuffer = function (framebuffer) {
         this.dirty = true;
-        this.dirtymask = this.framebuffer.map(function (e, i) { return e.map(function (f, j) { return f != framebuffer[i][j]; }); });
         this.framebuffer = framebuffer;
     };
     DrawManager.prototype.setPixel = function (x, y, c) {
@@ -83,6 +83,10 @@ var DrawManager = /** @class */ (function () {
             this.dirtymask[i] = new Array(this.width).fill(false);
         }
     };
+    DrawManager.prototype.updateDirtyMask = function () {
+        var _this = this;
+        this.dirtymask = this.framebuffer.map(function (e, i) { return e.map(function (f, j) { return f != _this.lastFrame[i][j]; }); });
+    };
     /**
     Fire this from the event in FrameManager unless you
     override the frame manager. Shoves the framebuffer
@@ -90,6 +94,7 @@ var DrawManager = /** @class */ (function () {
     */
     DrawManager.prototype.drawFrame = function () {
         if (this.dirty) {
+            this.updateDirtyMask();
             var canvasContext = this.canvasElement.getContext("2d");
             for (var i = 0; i < this.height; i++) {
                 for (var j = 0; j < this.width; j++) {
@@ -99,6 +104,7 @@ var DrawManager = /** @class */ (function () {
                     }
                 }
             }
+            this.lastFrame = structuredClone(this.framebuffer);
             this.dirty = false;
         }
     };

@@ -34,15 +34,19 @@ setStartFunction(startFunction: Function) {
 start() {
   this.running = true;
   if(this.startFunction != null) this.startFunction(this.drawManager);
-  this.runInterval = setInterval(function (dm) {
-    this.frameFunction(dm);
-    dm.drawFrame();
-  }, 1000/this.fps, this.drawManager);
+  this.runInterval = setInterval(function (fm, dm) {
+    fm.executeFrame(dm);
+  }, 1000/this.fps, this, this.drawManager);
 }
 
 stop() {
   this.running = false
   clearInterval(this.runInterval);
+}
+
+private executeFrame(drawManager: DrawManager) {
+  this.frameFunction(drawManager);
+  drawManager.drawFrame();
 }
 
 }

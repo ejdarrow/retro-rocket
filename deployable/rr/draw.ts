@@ -2,6 +2,7 @@ export class DrawManager {
   width: number = 160;
   height: number = 144;
   framebuffer: any;
+  lastFrame: any;
   dirtymask: any;
   colors: number[];
   dirty: boolean = true;
@@ -19,6 +20,7 @@ export class DrawManager {
     this.initializeColors();
     this.initializeFrameBuffer();
     this.initializeDirtyBuffer();
+    this.lastFrame = structuredClone(this.framebuffer);
   }
 
 
@@ -51,7 +53,6 @@ Get [height, width] as a two-element array.
 
   setFramebuffer(framebuffer:any) {
     this.dirty = true;
-    this.dirtymask = this.framebuffer.map((e, i) => e.map((f, j) => f != framebuffer[i][j]));
     this.framebuffer = framebuffer;
   }
 
@@ -100,6 +101,10 @@ private initializeDirtyBuffer() {
   }
 }
 
+private updateDirtyMask() {
+  this.dirtymask = this.framebuffer.map((e, i) => e.map((f, j) => f != this.lastFrame[i][j]));
+}
+
 /**
 Fire this from the event in FrameManager unless you
 override the frame manager. Shoves the framebuffer
@@ -107,6 +112,7 @@ into the viewport.
 */
 drawFrame() {
   if(this.dirty) {
+    this.updateDirtyMask();
     var canvasContext = this.canvasElement.getContext("2d");
     for(var i = 0; i < this.height; i++) {
       for(var j = 0; j < this.width; j++) {
@@ -116,6 +122,7 @@ drawFrame() {
         }
       }
     }
+    this.lastFrame = structuredClone(this.framebuffer);
     this.dirty = false;
   }
 }
