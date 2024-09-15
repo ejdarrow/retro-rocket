@@ -6,7 +6,7 @@ var FrameManager = /** @class */ (function () {
     Initialize the DrawManager elsewhere and set it here.
     */
     function FrameManager(drawManager) {
-        this.fps = 60;
+        this.fps = 40;
         this.frameOf = 0;
         this.running = false;
         this.drawManager = drawManager;
@@ -29,15 +29,14 @@ var FrameManager = /** @class */ (function () {
         this.running = true;
         if (this.startFunction != null)
             this.startFunction(this.drawManager);
-        this.activeInterval = setInterval(this.executeFrame, 1000 / this.fps, this.frameFunction, this.drawManager);
+        this.runInterval = setInterval(function (dm) {
+            this.frameFunction(dm);
+            dm.drawFrame();
+        }, 1000 / this.fps, this.drawManager);
     };
     FrameManager.prototype.stop = function () {
         this.running = false;
-        clearInterval(this.activeInterval);
-    };
-    FrameManager.prototype.executeFrame = function (frameFunction, drawManager) {
-        frameFunction(drawManager);
-        drawManager.drawFrame();
+        clearInterval(this.runInterval);
     };
     return FrameManager;
 }());

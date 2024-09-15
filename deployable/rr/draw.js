@@ -5,7 +5,7 @@ var DrawManager = /** @class */ (function () {
     function DrawManager(canvasElement) {
         this.width = 160;
         this.height = 144;
-        this.dirty = false;
+        this.dirty = true;
         this.scale = 4; //adaptive scale?
         this.white = "white";
         this.black = "black";
@@ -15,6 +15,7 @@ var DrawManager = /** @class */ (function () {
         this.canvasElement = canvasElement;
         this.initializeColors();
         this.initializeFrameBuffer();
+        this.initializeDirtyBuffer();
     }
     DrawManager.prototype.setCanvasElement = function (element) {
         this.canvasElement = element;
@@ -39,17 +40,20 @@ var DrawManager = /** @class */ (function () {
     };
     DrawManager.prototype.setFramebuffer = function (framebuffer) {
         this.dirty = true;
+        this.dirtymask = this.framebuffer.map(function (e, i) { return e.map(function (f, j) { return f != framebuffer[i][j]; }); });
         this.framebuffer = framebuffer;
     };
     DrawManager.prototype.setPixel = function (x, y, c) {
         this.dirty = true;
         this.framebuffer[x][y] = c;
+        this.dirtymask[x][y] = true;
     };
     /**
     Set all of the colors.
     */
     DrawManager.prototype.setColors = function (colorsToSet) {
         this.dirty = true;
+        this.initializeDirtyBuffer();
         if (colorsToSet.length > this.colorLimit) {
             return false;
         }
@@ -61,6 +65,7 @@ var DrawManager = /** @class */ (function () {
     Set specifically one color.
     */
     DrawManager.prototype.setColor = function (index, colorToSet) {
+        this.dirty = true;
         this.colors[index] = colorToSet;
     };
     DrawManager.prototype.initializeColors = function () {
@@ -69,10 +74,13 @@ var DrawManager = /** @class */ (function () {
     DrawManager.prototype.initializeFrameBuffer = function () {
         this.framebuffer = new Array(this.height);
         for (var i = 0; i < this.height; i++) {
-            this.framebuffer[i] = new Array(this.width);
-            for (var j = 0; j < this.width; j++) {
-                this.framebuffer[i][j] = 0;
-            }
+            this.framebuffer[i] = new Array(this.width).fill(0);
+        }
+    };
+    DrawManager.prototype.initializeDirtyBuffer = function () {
+        this.dirtymask = new Array(this.height);
+        for (var i = 0; i < this.height; i++) {
+            this.dirtymask[i] = new Array(this.width).fill(false);
         }
     };
     /**
@@ -85,7 +93,10 @@ var DrawManager = /** @class */ (function () {
             var canvasContext = this.canvasElement.getContext("2d");
             for (var i = 0; i < this.height; i++) {
                 for (var j = 0; j < this.width; j++) {
-                    this.drawPixel(canvasContext, i, j, this.framebuffer[i][j]);
+                    if (this.dirtymask[i][j]) {
+                        this.drawPixel(canvasContext, i, j, this.framebuffer[i][j]);
+                        this.dirtymask[i][j] = false;
+                    }
                 }
             }
             this.dirty = false;

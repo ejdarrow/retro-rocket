@@ -5,7 +5,7 @@ export class FrameManager {
   frameOf: number = 0;
   drawManager: DrawManager;
   running: boolean = false;
-  activeInterval: number;
+  runInterval: number;
   frameFunction: Function;
 
 /**
@@ -34,20 +34,15 @@ setStartFunction(startFunction: Function) {
 start() {
   this.running = true;
   if(this.startFunction != null) this.startFunction(this.drawManager);
-  this.activeInterval = setInterval(function (dm) {
-    this.executeFrame(dm);
+  this.runInterval = setInterval(function (dm) {
+    this.frameFunction(dm);
+    dm.drawFrame();
   }, 1000/this.fps, this.drawManager);
 }
 
 stop() {
-  this.running = false;
-  clearInterval(this.activeInterval);
+  this.running = false
+  clearInterval(this.runInterval);
 }
-
-private executeFrame(drawManager: DrawManager) {
-  this.frameFunction(drawManager);
-  drawManager.drawFrame();
-}
-
 
 }
