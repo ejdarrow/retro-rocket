@@ -1,7 +1,7 @@
 import DrawManager from "./draw.js";
 
 export class FrameManager {
-  fps: number = 40;
+  fps: number = 59;
   frameOf: number = 0;
   drawManager: DrawManager;
   running: boolean = false;

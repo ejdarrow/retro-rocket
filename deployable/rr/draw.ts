@@ -8,7 +8,7 @@ export class DrawManager {
   dirty: boolean = true;
 
   canvasElement: Element;
-  scale: number = 4; //adaptive scale?
+  scale: number = 3; //adaptive scale?
   white: string = "white";
   black: string = "black";
   green: string = "green";

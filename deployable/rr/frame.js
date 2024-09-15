@@ -6,7 +6,7 @@ var FrameManager = /** @class */ (function () {
     Initialize the DrawManager elsewhere and set it here.
     */
     function FrameManager(drawManager) {
-        this.fps = 40;
+        this.fps = 59;
         this.frameOf = 0;
         this.running = false;
         this.drawManager = drawManager;
