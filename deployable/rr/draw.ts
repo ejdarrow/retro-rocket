@@ -24,8 +24,8 @@ setCanvasElement(element: Element) {
 }
 
 
-getFrameBuffer() {
-  return this.frameBuffer;
+getFramebuffer() {
+  return this.framebuffer;
 }
 
   getColors() {
@@ -46,7 +46,7 @@ Get [height, width] as a two-element array.
     return [this.height, this.width];
   }
 
-  setFrameBuffer(framebuffer:any) {
+  setFramebuffer(framebuffer:any) {
     this.framebuffer = framebuffer;
   }
 

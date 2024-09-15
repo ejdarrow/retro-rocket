@@ -12,8 +12,13 @@
   let drawManager = new DrawManager(document.getElementById("frame"));
   let frameManager = new FrameManager(drawManager);
   let game = new Game();
-  frameManager.setStartFunction(game.start);
-  frameManager.setFrameFunction(game.update);
+  frameManager.setStartFunction(() => {
+    game.start(drawManager);
+  });
+  frameManager.setFrameFunction(() => {
+    game.update(drawManager);
+  });
+  drawManager.drawFrame();
   frameManager.start();
 </script>
 </body>

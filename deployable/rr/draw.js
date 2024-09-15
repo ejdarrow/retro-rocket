@@ -18,8 +18,8 @@ var DrawManager = /** @class */ (function () {
     DrawManager.prototype.setCanvasElement = function (element) {
         this.canvasElement = element;
     };
-    DrawManager.prototype.getFrameBuffer = function () {
-        return this.frameBuffer;
+    DrawManager.prototype.getFramebuffer = function () {
+        return this.framebuffer;
     };
     DrawManager.prototype.getColors = function () {
         return this.colors;
@@ -36,7 +36,7 @@ var DrawManager = /** @class */ (function () {
     DrawManager.prototype.getDims = function () {
         return [this.height, this.width];
     };
-    DrawManager.prototype.setFrameBuffer = function (framebuffer) {
+    DrawManager.prototype.setFramebuffer = function (framebuffer) {
         this.framebuffer = framebuffer;
     };
     DrawManager.prototype.setPixel = function (x, y, c) {

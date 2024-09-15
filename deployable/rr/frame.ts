@@ -1,7 +1,8 @@
 import DrawManager from "./draw.js";
 
 export class FrameManager {
-  fps: number = 60;
+  fps: number = 40;
+  frameOf: number = 0;
   drawManager: DrawManager;
   running: boolean = false;
   activeInterval: number;
@@ -33,7 +34,9 @@ setStartFunction(startFunction: Function) {
 start() {
   this.running = true;
   if(this.startFunction != null) this.startFunction(this.drawManager);
-  this.activeInterval = setInterval(executeFrame, 1000/this.fps);
+  this.activeInterval = setInterval(function (dm) {
+    this.executeFrame(dm);
+  }, 1000/this.fps, this.drawManager);
 }
 
 stop() {
@@ -41,13 +44,9 @@ stop() {
   clearInterval(this.activeInterval);
 }
 
-private executeFrame() {
-  if(this.running) {
-    this.frameFunction(this.drawManager);
-    this.drawManager.drawFrame();
-  } else {
-    stop();
-  }
+private executeFrame(drawManager: DrawManager) {
+  this.frameFunction(drawManager);
+  drawManager.drawFrame();
 }
 
 
