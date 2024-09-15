@@ -1,4 +1,4 @@
-import DrawManager from "./draw.js";
+import { DrawManager } from "./draw.js";
 
 export class FrameManager {
   fps: number = 59;
@@ -7,6 +7,7 @@ export class FrameManager {
   running: boolean = false;
   runInterval: number;
   frameFunction: Function;
+  startFunction: Function;
 
 /**
 Initialize the DrawManager elsewhere and set it here.
@@ -34,7 +35,7 @@ setStartFunction(startFunction: Function) {
 start() {
   this.running = true;
   if(this.startFunction != null) this.startFunction(this.drawManager);
-  this.runInterval = setInterval(function (fm, dm) {
+  this.runInterval = setInterval(function (fm:FrameManager , dm:DrawManager) {
     fm.executeFrame(dm);
   }, 1000/this.fps, this, this.drawManager);
 }

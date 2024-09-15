@@ -4,10 +4,10 @@ export class DrawManager {
   framebuffer: any;
   lastFrame: any;
   dirtymask: any;
-  colors: number[];
+  colors: string[];
   dirty: boolean = true;
 
-  canvasElement: Element;
+  canvasElement: HTMLCanvasElement;
   scale: number = 3; //adaptive scale?
   white: string = "white";
   black: string = "black";
@@ -15,7 +15,7 @@ export class DrawManager {
   red: string = "red";
   colorLimit: number = 4;
 
-  constructor(canvasElement: Element) {
+  constructor(canvasElement: HTMLCanvasElement) {
     this.canvasElement = canvasElement;
     this.initializeColors();
     this.initializeFrameBuffer();
@@ -24,7 +24,7 @@ export class DrawManager {
   }
 
 
-setCanvasElement(element: Element) {
+setCanvasElement(element: HTMLCanvasElement) {
   this.canvasElement = element;
 }
 
@@ -65,7 +65,7 @@ Get [height, width] as a two-element array.
 /**
 Set all of the colors.
 */
-setColors(colorsToSet: number[] ) {
+setColors(colorsToSet: string[] ) {
   this.dirty = true;
   this.initializeDirtyBuffer();
   if(colorsToSet.length > this.colorLimit) {
@@ -102,7 +102,7 @@ private initializeDirtyBuffer() {
 }
 
 private updateDirtyMask() {
-  this.dirtymask = this.framebuffer.map((e, i) => e.map((f, j) => f != this.lastFrame[i][j]));
+  this.dirtymask = this.framebuffer.map((e, i:number) => e.map((f, j:number) => f != this.lastFrame[i][j]));
 }
 
 /**

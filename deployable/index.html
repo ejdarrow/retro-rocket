@@ -3,22 +3,36 @@
   <script> var exports = {}; </script>
   <script src="rr/draw.js"> </script>
   <script src="rr/frame.js"> </script>
+  <script src="rr/input.js"> </script>
 <script src="game/game.js"> </script>
 </head>
-<body>
+<body id="body">
 <canvas id="frame" width="1000" height="1000"></canvas>
 
 <script>
   let drawManager = new DrawManager(document.getElementById("frame"));
   let frameManager = new FrameManager(drawManager);
-  let game = new Game();
+  let inputManager = new InputManager(document.getElementById("body"));
+  let game = new Game(drawManager);
 
   frameManager.setStartFunction(() => {
-    game.start(drawManager);
+    game.start();
   });
+
   frameManager.setFrameFunction(() => {
-    game.update(drawManager);
+    game.update();
   });
+  inputManager.setStructuredEventListenerFunctions([
+    (e) => game.pressUp(e),
+    (e) => game.pressLeft(e),
+    (e) => game.pressDown(e),
+    (e) => game.pressRight(e),
+    (e) => game.pressA(e),
+    (e) => game.pressB(e),
+    (e) => game.pressStart(e),
+    (e) => game.pressSelect(e)
+  ]);
+  inputManager.engageEventListeners();
   frameManager.start();
 </script>
 </body>
